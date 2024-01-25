@@ -10,4 +10,4 @@ onMount(async () => {
 })
 </script>
 
-<div class="game border-2 border-blue-300" style="width:250px; height:500px;"></div>
+<div class="game border-2 border-blue-300 h-full aspect-[1/2] m-auto"></div>
