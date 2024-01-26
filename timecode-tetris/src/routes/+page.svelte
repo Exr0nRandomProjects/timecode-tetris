@@ -6,12 +6,8 @@
 
 
     const charts_tracks = {
-        // Left:        { backgroundColor: "blue" },
-        // Right:       { backgroundColor: "blue" },
-        // Rotate:      { backgroundColor: "blue" },
-        // Down:        { backgroundColor: "blue" },
-        keydown:        { backgroundColor: "blue" },
-        keyup:          { backgroundColor: "yellow" },
+        keydown:     { backgroundColor: "blue" },
+        keyup:       { backgroundColor: "yellow" },
 
         Placed:      { backgroundColor: "lightgreen" },
         Line:        { backgroundColor: "darkgreen" },
@@ -47,13 +43,7 @@
     let start_time = Date.now();
 
 
-    // const chart_callbacks = Object.fromEntries(Object.keys(callback_charts).map((k, i) =>
-    //     ['on' + k, (...args) => {
-    //         scatter_data.datasets[i]?.data?.push({ x: Date.now()-start_time, y: i });
-    //     }]
-    // ))
-
-    const keyCode_to_chartY = {
+    const KECODE_TO_CHART_Y = {
         ArrowLeft:  2,
         ArrowRight: 3,
         ArrowUp:    4,
@@ -68,7 +58,6 @@
         },
 
         onLine: () => {
-            // scatter_data.pushPoint('Line', { x: Date.now() - start_time, y: 0 });
             scatter_data.pushPoint('Line', 0);
         },
         onPlaced: () => {
@@ -76,9 +65,8 @@
         },
 
         onKey: (evt) => {
-            // console.log(evt);
-            if (evt.key in keyCode_to_chartY) {
-                scatter_data.pushPoint(evt.type, keyCode_to_chartY[evt.key]);
+            if (evt.key in KECODE_TO_CHART_Y) {
+                scatter_data.pushPoint(evt.type, KECODE_TO_CHART_Y[evt.key]);
             }
         },
 
