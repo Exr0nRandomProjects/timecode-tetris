@@ -6,7 +6,7 @@ onMount(async () => {
     await import("$lib/blockrain-dist/blockrain.jquery.min.js");
     await import("$lib/blockrain-dist/blockrain.css");
 
-    jQuery('.game').blockrain();
+    jQuery('.game').blockrain({ onKey: console.log, onBlockAppear: console.log });
 })
 </script>
 

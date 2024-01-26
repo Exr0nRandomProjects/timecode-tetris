@@ -21,6 +21,7 @@
   },
   "type": "module",
   "dependencies": {
-    "jquery": "3.2.1"
+    "jquery": "3.2.1",
+    "seedrandom": "^3.0.5"
   }
 }
