@@ -5,20 +5,32 @@
     let charts_shown = true;
 
 
-    const callback_charts = {
-        Key:         { backgroundColor: "blue" },
-        Line:        { backgroundColor: "darkgreen" },
-        BlockAppear: { backgroundColor: "darkgreen" },
+    const charts_tracks = {
+        // Left:        { backgroundColor: "blue" },
+        // Right:       { backgroundColor: "blue" },
+        // Rotate:      { backgroundColor: "blue" },
+        // Down:        { backgroundColor: "blue" },
+        keydown:        { backgroundColor: "blue" },
+        keyup:          { backgroundColor: "yellow" },
+
         Placed:      { backgroundColor: "lightgreen" },
+        Line:        { backgroundColor: "darkgreen" },
     };
 
-    const make_default_scatter_data = () => ({
-        datasets: Object.entries(callback_charts).map(([k, v], i) => ({
-            label: k,
-            data: [],
-            ...v
-        }))
-    });
+    const make_default_scatter_data = () => {
+        const key_map = Object.fromEntries(Object.keys(charts_tracks).map((k, i) => [k, i]));
+        const data = {
+            datasets: Object.entries(charts_tracks).map(([k, v], i) => ({
+                label: k,
+                data: [],
+                ...v
+            }))
+        };
+        // data.pushPoint = (key, point) => { data.datasets[key_map[key]]?.data.push(point); }
+        data.pushPoint = (key, y) => { data.datasets[key_map[key]]?.data.push({ x: Date.now() - start_time, y }); }
+        return data;
+    }
+
 
     $: scatter_data = make_default_scatter_data();
     $: chart_options = {
@@ -35,12 +47,18 @@
     let start_time = Date.now();
 
 
-    const chart_callbacks = Object.fromEntries(Object.keys(callback_charts).map((k, i) =>
-        ['on' + k, (...args) => {
-            scatter_data.datasets[i]?.data?.push({ x: Date.now()-start_time, y: i });
-        }]
-    ))
+    // const chart_callbacks = Object.fromEntries(Object.keys(callback_charts).map((k, i) =>
+    //     ['on' + k, (...args) => {
+    //         scatter_data.datasets[i]?.data?.push({ x: Date.now()-start_time, y: i });
+    //     }]
+    // ))
 
+    const keyCode_to_chartY = {
+        ArrowLeft:  2,
+        ArrowRight: 3,
+        ArrowUp:    4,
+        ArrowDown:  5,
+    }
 
     const callbacks = {
         onStart: () => {
@@ -48,11 +66,26 @@
             start_time = Date.now();
             scatter_data = make_default_scatter_data()
         },
+
+        onLine: () => {
+            // scatter_data.pushPoint('Line', { x: Date.now() - start_time, y: 0 });
+            scatter_data.pushPoint('Line', 0);
+        },
+        onPlaced: () => {
+            scatter_data.pushPoint('Placed', 1);
+        },
+
+        onKey: (evt) => {
+            // console.log(evt);
+            if (evt.key in keyCode_to_chartY) {
+                scatter_data.pushPoint(evt.type, keyCode_to_chartY[evt.key]);
+            }
+        },
+
         onTick: () => {
             chart_options.scales.x.max = Date.now() - start_time;
-            chart.update();
+            chart?.update();
         },
-        ...chart_callbacks
     }
 </script>
 
